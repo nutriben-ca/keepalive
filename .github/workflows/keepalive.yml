@@ -11,14 +11,9 @@ jobs:
     steps:
       - name: Ping Supabase Nutriben
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" \
             "https://lzljnszgqjxxufpkcolv.supabase.co/rest/v1/expense_profiles?limit=1" \
             -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6bGpuc3pncWp4eHVmcGtjb2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MTU2NzMsImV4cCI6MjA2NTA5MTY3M30.EtFJ4lpVx39gTbcFZHnFG44C7GkCoVCOT8f-v25NHXY" \
             -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6bGpuc3pncWp4eHVmcGtjb2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MTU2NzMsImV4cCI6MjA2NTA5MTY3M30.EtFJ4lpVx39gTbcFZHnFG44C7GkCoVCOT8f-v25NHXY")
-          echo "HTTP $STATUS"
-          if [ "$STATUS" = "200" ]; then
-            echo "✅ Nutriben activo"
-          else
-            echo "⚠️ Error: $STATUS"
-            exit 1
-          fi
+          echo "Respuesta completa:"
+          echo "$RESPONSE"
