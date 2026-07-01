@@ -5,15 +5,35 @@ on:
     - cron: '0 14 */5 * *'
   workflow_dispatch:
 
+permissions:
+  actions: write
+
 jobs:
-  keepalive:
+  ping-supabase:
+    name: Ping Supabase projects
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase Nutriben
+      - name: Ping Nutriben (lzljnszgqjxxufpkcolv)
         run: |
-          RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" \
-            "https://lzljnszgqjxxufpkcolv.supabase.co/rest/v1/expense_profiles?limit=1" \
-            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6bGpuc3pncWp4eHVmcGtjb2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MTU2NzMsImV4cCI6MjA2NTA5MTY3M30.EtFJ4lpVx39gTbcFZHnFG44C7GkCoVCOT8f-v25NHXY" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx6bGpuc3pncWp4eHVmcGtjb2x2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MTU2NzMsImV4cCI6MjA2NTA5MTY3M30.EtFJ4lpVx39gTbcFZHnFG44C7GkCoVCOT8f-v25NHXY")
-          echo "Respuesta completa:"
-          echo "$RESPONSE"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://lzljnszgqjxxufpkcolv.supabase.co/rest/v1/" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY_NUTRIBEN }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY_NUTRIBEN }}")
+          echo "Nutriben: HTTP $STATUS"
+
+      - name: Ping preclinica-etapa-1 (hwfppixepttcwuqlyuqo)
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://hwfppixepttcwuqlyuqo.supabase.co/rest/v1/" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY_NUTRIBEN }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY_NUTRIBEN }}")
+          echo "preclinica-etapa-1: HTTP $STATUS"
+
+  keepalive-github:
+    name: Keep GitHub Actions alive
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
